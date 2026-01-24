@@ -1,5 +1,5 @@
 import Nav from './Nav';
-import logo from './logo.png';
+import logo from './assets/Logo.svg';
 
 function Header() {
   return (
