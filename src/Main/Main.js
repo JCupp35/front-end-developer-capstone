@@ -1,14 +1,16 @@
-import heroImage from './assets/hero-image.png';
-import greekSalad from './assets/greek-salad.png';
-import bruchetta from './assets/bruchetta.png';
-import lemonDessert from './assets/lemon-dessert.png';
-import ratingStar from './assets/rating-star.svg';
-import customerPicture1 from './assets/customer-1.jpg';
-import customerPicture2 from './assets/customer-2.jpg';
-import customerPicture3 from './assets/customer-3.jpg';
-import customerPicture4 from './assets/customer-4.jpg';
-import restaurantChef from './assets/restaurant-chef-b.png';
-import marioAndAdrian from './assets/mario-and-adrian.png';
+import heroImage from '../assets/hero-image.png';
+import greekSalad from '../assets/greek-salad.png';
+import bruchetta from '../assets/bruchetta.png';
+import lemonDessert from '../assets/lemon-dessert.png';
+import ratingStar from '../assets/rating-star.svg';
+import customerPicture1 from '../assets/customer-1.jpg';
+import customerPicture2 from '../assets/customer-2.jpg';
+import customerPicture3 from '../assets/customer-3.jpg';
+import customerPicture4 from '../assets/customer-4.jpg';
+import restaurantChef from '../assets/restaurant-chef-b.png';
+import marioAndAdrian from '../assets/mario-and-adrian.png';
+
+import './Main.css';
 
 
 
