@@ -5,8 +5,10 @@ import './Header.css';
 function Header() {
   return (
     <header className="header">
-      <img src={logo} alt="Little lemon logo" />
-      <Nav />
+      <div className="container flex-container">
+        <img src={logo} alt="Little lemon logo" />
+        <Nav />
+      </div>
     </header>
   );
 }

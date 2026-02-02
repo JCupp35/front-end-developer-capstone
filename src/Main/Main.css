@@ -1,12 +1,10 @@
 /* Hero Section */
 .hero-section {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     background-color: #495E57;
-    padding: 2rem 290px;
-    gap: 2rem;
+    padding: 2rem 0;
     position: relative;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .hero-section article {
@@ -21,6 +19,7 @@
     margin: 0;
     position: relative;
     top: 3rem;
+    z-index: 10;
 }
 
 .hero-section img {
@@ -28,29 +27,27 @@
     border-radius: 16px;
     height: 400px;
     object-fit: cover;
+    display: block;
 }
 
 /* Specials Section */
 .specials-section {
-    display: flex;
-    flex-direction: column;
-    align-items: center; 
-    padding: 6rem 290px 4rem 290px;
-    gap: 2rem;
+    padding: 6rem 0 4rem;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .specials-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%; 
+    margin-bottom: 2rem;
 }
 
 .specials-cards {
     display: flex;
     justify-content: space-between;
     gap: 2rem;
-    width: 100%;
 }
 
 .card {
@@ -87,21 +84,19 @@
 
 /* Testimonials Section */
 .testimonials-section {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    align-items: center; 
-    padding: 4rem 290px;
+    padding: 4rem 0;
+    width: 100%;
+    box-sizing: border-box;
 }
 
-.testimonials-section > h2 {
+.testimonials-section h2 {
     text-align: center;
+    margin-bottom: 2rem;
 }
 
 .testimonials-cards {
     display: flex;
     gap: 1.5rem;
-    width: 100%; 
     justify-content: space-between;
 }
 
@@ -146,11 +141,9 @@
 
 /* About Section */
 .about-section {
-    display: flex;
-    gap: 2rem;
-    justify-content: space-between;
-    align-items: center;
-    padding: 4rem 290px 8rem 290px;
+    padding: 4rem 0 8rem;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .about-section article {
@@ -161,9 +154,11 @@
 
 .about-section figure {
     position: relative;
-    flex: 0 0 400px; 
+    flex: 0 0 400px;
+    max-width: 100%;
     height: 400px;
     margin: 0;
+    box-sizing: border-box;
 }
 
 .about-section figure img {
@@ -187,20 +182,11 @@
 }
 
 /* Responsive - Tablet */
-@media (max-width: 1024px) {
-    .header, .hero-section, .specials-section, .testimonials-section, .about-section, footer {
-        padding-left: 2rem;
-        padding-right: 2rem;
-    }
-}
-
 @media (max-width: 768px) {
-    .hero-section {
-        flex-direction: column;
-    }
-
     .hero-section figure {
         top: 0;
+        width: 100%;
+        flex: auto;
     }
 
     .specials-cards {
@@ -220,11 +206,12 @@
     }
 
     .about-section {
-        flex-direction: column;
         padding-bottom: 4rem;
     }
     
     .about-section figure {
+        flex: 0 0 100%;
+        max-width: 100%;
         width: 100%;
         height: auto;
         position: static;
@@ -236,13 +223,7 @@
         position: static;
         width: 100%;
         height: auto;
-    }
-    
-    footer {
-        flex-direction: column;
-        padding: 2rem;
-        align-items: center;
-        text-align: center;
+        flex: 1;
     }
 }
 

@@ -1,13 +1,12 @@
 footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    padding: 4rem 290px;
     background-color: #D9D9D9;
-    gap: 2rem;
+    padding: 4rem 0;
+    width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
 }
 
-footer > img {
+footer > div > img {
     width: 100px;
     height: auto;
 }
@@ -45,12 +44,8 @@ footer a {
     color: #333;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
     footer {
-        flex-direction: column;
-        padding: 2rem;
-        align-items: center;
         text-align: center;
     }
 }
