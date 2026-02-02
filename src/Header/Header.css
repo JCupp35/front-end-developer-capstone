@@ -1,0 +1,27 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.75rem; 
+    padding: 1rem 290px;
+}
+
+.header img {
+    height: 50px;
+    width: auto;
+}
+
+/* Mobile responsive */
+@media (max-width: 1024px) {
+    .header {
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        padding: 1rem;
+    }
+}
