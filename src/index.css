@@ -1,12 +1,95 @@
+@import url("https://fonts.googleapis.com/css2?family=Karla:wght@400;500;700;800&family=Markazi+Text:wght@400;500&display=swap");
+
+:root {
+  --ll-color-green: #495e57;
+  --ll-color-yellow: #f4ce14;
+  --ll-color-orange: #ee9972;
+  --ll-color-light: #edefee;
+  --ll-color-gray-100: #d9d9d9;
+  --ll-color-gray-900: #333333;
+  --ll-color-white: #ffffff;
+  --ll-color-black: #000000;
+
+  --ll-font-body: "Karla", sans-serif;
+  --ll-font-display: "Markazi Text", serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: var(--ll-font-body);
+  color: var(--ll-color-gray-900);
+  background-color: var(--ll-color-white);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
   width: 100%;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  font-family: var(--ll-font-display);
+  line-height: 1;
+  color: inherit;
+}
+
+h1 {
+  font-size: 2.25rem;
+  font-weight: 500;
+}
+
+h2 {
+  font-size: 2.5rem;
+  font-weight: 400;
+}
+
+h3 {
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+h4 {
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+h5 {
+  font-size: 1.125rem;
+  font-weight: 500;
+}
+
+h6 {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+p {
+  margin: 0;
+  font-family: var(--ll-font-body);
+  font-size: 1rem;
+  line-height: 1.3;
+  color: inherit;
+}
+
+span {
+  font-family: var(--ll-font-body);
+  line-height: inherit;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
 }
 
 

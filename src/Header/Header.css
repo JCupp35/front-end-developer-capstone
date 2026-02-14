@@ -1,12 +1,26 @@
 .header {
     background-color: white;
     width: 100%;
-    padding: 1rem 0;
+    padding: 1.25rem 0 1rem;
     box-sizing: border-box;
     overflow-x: hidden;
 }
 
+.header .container {
+    align-items: center;
+}
+
 .header img {
-    height: 50px;
+    height: 55px;
     width: auto;
+}
+
+@media (max-width: 768px) {
+    .header {
+        padding: 1rem 0 1.1rem;
+    }
+
+    .header img {
+        height: 50px;
+    }
 }
