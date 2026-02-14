@@ -173,6 +173,7 @@
     padding: 4rem 0;
     width: 100%;
     box-sizing: border-box;
+    background-color: var(--ll-color-gray-100);
 }
 
 .testimonials-section h2 {
@@ -293,6 +294,24 @@
     top: 0;
     right: 0;
     z-index: 1;
+}
+
+/* Booking Page */
+.booking-page {
+    padding: 5.5rem 0 6rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.booking-page h1 {
+    margin-bottom: 1rem;
+    color: var(--ll-color-green);
+}
+
+.booking-page p {
+    max-width: 60ch;
+    font-size: 1.125rem;
+    color: var(--ll-color-gray-900);
 }
 
 /* Responsive - Tablet */
