@@ -2,19 +2,11 @@ import { useState } from 'react';
 import BookingForm from './BookingForm';
 import Bookings from './Bookings';
 
-function BookingPage() {
+function BookingPage({ availableTimes, onDateChangeFromMain }) {
   const [date, setDate] = useState('');
   const [time, setTime] = useState('17:00');
   const [guests, setGuests] = useState('1');
   const [occasion, setOccasion] = useState('Birthday');
-  const [availableTimes] = useState([
-    '17:00',
-    '18:00',
-    '19:00',
-    '20:00',
-    '21:00',
-    '22:00',
-  ]);
 
   const bookingData = {
     date,
@@ -27,6 +19,12 @@ function BookingPage() {
     event.preventDefault();
   };
 
+  const handleDateChange = (event) => {
+    const selectedDate = event.target.value;
+    setDate(selectedDate);
+    onDateChangeFromMain(selectedDate);
+  };
+
   return (
     <section className="booking-page">
       <div className="container">
@@ -37,7 +35,7 @@ function BookingPage() {
           guests={guests}
           occasion={occasion}
           availableTimes={availableTimes}
-          onDateChange={(event) => setDate(event.target.value)}
+          onDateChange={handleDateChange}
           onTimeChange={(event) => setTime(event.target.value)}
           onGuestsChange={(event) => setGuests(event.target.value)}
           onOccasionChange={(event) => setOccasion(event.target.value)}

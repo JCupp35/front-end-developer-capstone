@@ -6,7 +6,7 @@ function Bookings({ bookingData, availableTimes }) {
       <p>Selected time: {bookingData.time}</p>
       <p>Guests: {bookingData.guests}</p>
       <p>Occasion: {bookingData.occasion}</p>
-      <p>Available times: {availableTimes.join(', ')}</p>
+      <p aria-live="polite">Available times: {availableTimes.join(', ')}</p>
     </section>
   );
 }
