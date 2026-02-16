@@ -7,11 +7,11 @@ import './Main.css';
 
 const bookingTimes = ['17:00', '18:00', '19:00', '20:00', '21:00', '22:00'];
 
-function initializeTimes() {
+export function initializeTimes() {
   return bookingTimes;
 }
 
-function updateTimes(state, action) {
+export function updateTimes(state, action) {
   if (action.type === 'date_changed') {
     return bookingTimes;
   }
