@@ -2,7 +2,7 @@ import { useState } from 'react';
 import BookingForm from './BookingForm';
 import Bookings from './Bookings';
 
-function BookingPage({ availableTimes, onDateChangeFromMain }) {
+function BookingPage({ availableTimes, bookings, onDateChangeFromMain, submitForm }) {
   const [date, setDate] = useState('');
   const [time, setTime] = useState('17:00');
   const [guests, setGuests] = useState('1');
@@ -17,6 +17,7 @@ function BookingPage({ availableTimes, onDateChangeFromMain }) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    submitForm(bookingData);
   };
 
   const handleDateChange = (event) => {
@@ -41,7 +42,11 @@ function BookingPage({ availableTimes, onDateChangeFromMain }) {
           onOccasionChange={(event) => setOccasion(event.target.value)}
           onSubmit={handleSubmit}
         />
-        <Bookings bookingData={bookingData} availableTimes={availableTimes} />
+        <Bookings
+          bookingData={bookingData}
+          bookings={bookings}
+          availableTimes={availableTimes}
+        />
       </div>
     </section>
   );

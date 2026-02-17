@@ -1,25 +1,35 @@
-import { useReducer } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { useReducer, useState } from 'react';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import Homepage from './Homepage';
 import BookingPage from './BookingPage';
+import ConfirmedBooking from './ConfirmedBooking';
+import { fetchAPI, submitAPI } from '../utilities';
 
 import './Main.css';
 
-const bookingTimes = ['17:00', '18:00', '19:00', '20:00', '21:00', '22:00'];
+const BOOKINGS_STORAGE_KEY = 'bookings';
+
+function loadStoredBookings() {
+  const storedBookings = localStorage.getItem(BOOKINGS_STORAGE_KEY);
+  return storedBookings ? JSON.parse(storedBookings) : [];
+}
 
 export function initializeTimes() {
-  return bookingTimes;
+  return fetchAPI(new Date());
 }
 
 export function updateTimes(state, action) {
   if (action.type === 'date_changed') {
-    return bookingTimes;
+    return fetchAPI(new Date(action.selectedDate));
   }
 
   return state;
 }
 
 function Main() {
+  const navigate = useNavigate();
+  const [bookings, setBookings] = useState(loadStoredBookings);
+
   const [availableTimes, dispatchAvailableTimes] = useReducer(
     updateTimes,
     [],
@@ -33,6 +43,17 @@ function Main() {
     });
   };
 
+  const submitForm = (formData) => {
+    if (submitAPI(formData)) {
+      setBookings((existingBookings) => {
+        const updatedBookings = [...existingBookings, formData];
+        localStorage.setItem(BOOKINGS_STORAGE_KEY, JSON.stringify(updatedBookings));
+        return updatedBookings;
+      });
+      navigate('/confirmed');
+    }
+  };
+
   return (
     <main>
       <Routes>
@@ -42,10 +63,13 @@ function Main() {
           element={
             <BookingPage
               availableTimes={availableTimes}
+              bookings={bookings}
               onDateChangeFromMain={handleDateChange}
+              submitForm={submitForm}
             />
           }
         />
+        <Route path="/confirmed" element={<ConfirmedBooking />} />
         <Route path="*" element={<Homepage />} />
       </Routes>
     </main>
