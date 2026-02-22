@@ -22,16 +22,34 @@ const renderBookingRoute = () =>
     </MemoryRouter>
   );
 
-const fillRequiredValidFields = () => {
-  fireEvent.change(screen.getByLabelText(/choose date/i), {
-    target: { value: '2026-02-20' },
+const setFieldValue = (label, value) => {
+  fireEvent.change(screen.getByLabelText(label), {
+    target: { value },
   });
-  fireEvent.change(screen.getByLabelText(/choose time/i), {
-    target: { value: '17:00' },
-  });
-  fireEvent.change(screen.getByLabelText(/occasion/i), {
-    target: { value: 'Birthday' },
-  });
+};
+
+const fillRequiredFields = ({
+  name = 'Jim Johnson',
+  phone = '(555) 555-5555',
+  date = '2026-02-20',
+  time = '17:00',
+  occasion = 'Birthday',
+} = {}) => {
+  if (name !== null) {
+    setFieldValue(/full name/i, name);
+  }
+  if (phone !== null) {
+    setFieldValue(/phone number/i, phone);
+  }
+  if (date !== null) {
+    setFieldValue(/date to come/i, date);
+  }
+  if (time !== null) {
+    setFieldValue(/time to come/i, time);
+  }
+  if (occasion !== null) {
+    setFieldValue(/occasion/i, occasion);
+  }
 };
 
 test('initializeTimes returns available times from fetchAPI', () => {
@@ -69,17 +87,18 @@ test('reads existing bookings from localStorage', () => {
 
   renderBookingRoute();
 
-  expect(
-    screen.getByText('2026-02-18 - 18:00 - 2 guests - Birthday')
-  ).toBeInTheDocument();
+  expect(screen.queryByRole('heading', { name: /bookings/i })).not.toBeInTheDocument();
 });
 
 test('writes new booking to localStorage on successful submit', () => {
   renderBookingRoute();
-  fillRequiredValidFields();
-  fireEvent.click(screen.getByDisplayValue('Make Your reservation'));
+  fillRequiredFields();
+  fireEvent.click(screen.getByDisplayValue('Continue'));
+  fireEvent.click(screen.getByRole('button', { name: /confirm booking/i }));
 
   expect(submitAPI).toHaveBeenCalledWith({
+    name: 'Jim Johnson',
+    phone: '(555) 555-5555',
     date: '2026-02-20',
     time: '17:00',
     guests: '1',
@@ -89,6 +108,8 @@ test('writes new booking to localStorage on successful submit', () => {
   const storedBookings = JSON.parse(localStorage.getItem('bookings'));
   expect(storedBookings).toHaveLength(1);
   expect(storedBookings[0]).toEqual({
+    name: 'Jim Johnson',
+    phone: '(555) 555-5555',
     date: '2026-02-20',
     time: '17:00',
     guests: '1',
@@ -99,47 +120,41 @@ test('writes new booking to localStorage on successful submit', () => {
 test('submit button is disabled until all required fields are valid', () => {
   renderBookingRoute();
 
-  const submitButton = screen.getByDisplayValue('Make Your reservation');
+  const submitButton = screen.getByDisplayValue('Continue');
   expect(submitButton).toBeDisabled();
 
-  fillRequiredValidFields();
+  fillRequiredFields();
 
   expect(submitButton).toBeEnabled();
 });
 
-test('submit remains disabled when date is missing', () => {
+test('submit remains disabled when full name is missing', () => {
   renderBookingRoute();
 
-  const submitButton = screen.getByDisplayValue('Make Your reservation');
-  fireEvent.change(screen.getByLabelText(/choose time/i), {
-    target: { value: '17:00' },
-  });
-  fireEvent.change(screen.getByLabelText(/occasion/i), {
-    target: { value: 'Birthday' },
-  });
+  const submitButton = screen.getByDisplayValue('Continue');
+  fillRequiredFields({ name: null });
 
   expect(submitButton).toBeDisabled();
+  fireEvent.blur(screen.getByLabelText(/full name/i));
+  expect(screen.getByText(/please enter your full name/i)).toBeInTheDocument();
 });
 
 test('submit remains disabled when time is missing', () => {
   renderBookingRoute();
 
-  const submitButton = screen.getByDisplayValue('Make Your reservation');
-  fireEvent.change(screen.getByLabelText(/choose date/i), {
-    target: { value: '2026-02-20' },
-  });
-  fireEvent.change(screen.getByLabelText(/occasion/i), {
-    target: { value: 'Birthday' },
-  });
+  const submitButton = screen.getByDisplayValue('Continue');
+  fillRequiredFields({ time: null });
 
   expect(submitButton).toBeDisabled();
+  fireEvent.blur(screen.getByLabelText(/time to come/i));
+  expect(screen.getByText(/please select an available time/i)).toBeInTheDocument();
 });
 
 test('submit remains disabled when guests are out of range', () => {
   renderBookingRoute();
 
-  const submitButton = screen.getByDisplayValue('Make Your reservation');
-  fillRequiredValidFields();
+  const submitButton = screen.getByDisplayValue('Continue');
+  fillRequiredFields();
   fireEvent.change(screen.getByLabelText(/number of guests/i), {
     target: { value: '0' },
   });
@@ -149,29 +164,76 @@ test('submit remains disabled when guests are out of range', () => {
     target: { value: '11' },
   });
   expect(submitButton).toBeDisabled();
+  fireEvent.blur(screen.getByLabelText(/number of guests/i));
+  expect(screen.getByText(/please choose between 1 and 10 guests/i)).toBeInTheDocument();
 });
 
-test('submit remains disabled when occasion is missing', () => {
+test('submit stays enabled when occasion is missing', () => {
   renderBookingRoute();
 
-  const submitButton = screen.getByDisplayValue('Make Your reservation');
-  fireEvent.change(screen.getByLabelText(/choose date/i), {
-    target: { value: '2026-02-20' },
-  });
-  fireEvent.change(screen.getByLabelText(/choose time/i), {
-    target: { value: '17:00' },
-  });
+  const submitButton = screen.getByDisplayValue('Continue');
+  fillRequiredFields({ occasion: null });
+
+  expect(submitButton).toBeEnabled();
+  fireEvent.blur(screen.getByLabelText(/occasion/i));
+  expect(screen.queryByText(/please select an occasion/i)).not.toBeInTheDocument();
+});
+
+test('submit remains disabled when phone format is invalid', () => {
+  renderBookingRoute();
+
+  const submitButton = screen.getByDisplayValue('Continue');
+  fillRequiredFields({ phone: '555-555' });
 
   expect(submitButton).toBeDisabled();
+  fireEvent.blur(screen.getByLabelText(/phone number/i));
+  expect(screen.getByText(/please enter a valid 10-digit phone number/i)).toBeInTheDocument();
 });
 
-test('does not submit when form is invalid', () => {
+test('continue navigates to review page but does not confirm yet', () => {
+  renderBookingRoute();
+  fillRequiredFields();
+  fireEvent.click(screen.getByDisplayValue('Continue'));
+
+  expect(screen.getByRole('heading', { name: /summary/i })).toBeInTheDocument();
+  expect(submitAPI).not.toHaveBeenCalled();
+});
+
+test('accepts 10-digit phone and normalizes in summary', () => {
   renderBookingRoute();
 
-  fireEvent.change(screen.getByLabelText(/choose date/i), {
-    target: { value: '2026-02-20' },
-  });
-  fireEvent.click(screen.getByDisplayValue('Make Your reservation'));
+  fillRequiredFields({ phone: '5555555555' });
+  fireEvent.click(screen.getByDisplayValue('Continue'));
 
-  expect(submitAPI).not.toHaveBeenCalled();
+  expect(screen.getByText('(555) 555-5555')).toBeInTheDocument();
+});
+
+test('back button on review page returns to booking form with values', () => {
+  renderBookingRoute();
+  fillRequiredFields();
+  fireEvent.click(screen.getByDisplayValue('Continue'));
+  fireEvent.click(screen.getByRole('button', { name: /go back to booking form/i }));
+
+  expect(screen.getByLabelText(/full name/i)).toHaveValue('Jim Johnson');
+  expect(screen.getByLabelText(/phone number/i)).toHaveValue('(555) 555-5555');
+});
+
+test('confirm booking navigates home and shows dismissible banner', () => {
+  renderBookingRoute();
+  fillRequiredFields();
+  fireEvent.click(screen.getByDisplayValue('Continue'));
+  fireEvent.click(screen.getByRole('button', { name: /confirm booking/i }));
+
+  expect(screen.getByText(/booking confirmed/i)).toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: /dismiss booking confirmation banner/i }));
+  expect(screen.queryByText(/booking confirmed/i)).not.toBeInTheDocument();
+});
+
+test('summary includes occasion and formatted time', () => {
+  renderBookingRoute();
+  fillRequiredFields();
+  fireEvent.click(screen.getByDisplayValue('Continue'));
+
+  expect(screen.getByText('Birthday')).toBeInTheDocument();
+  expect(screen.getByText('5:00 PM')).toBeInTheDocument();
 });

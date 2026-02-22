@@ -1,16 +1,24 @@
 footer {
     background-color: var(--ll-color-gray-100);
-    padding: 4rem 0;
+    padding: 2.5rem 0 2rem;
     width: 100%;
     box-sizing: border-box;
     overflow-x: hidden;
 }
 
-footer > div > img {
-    width: 100px;
+footer .footer-content {
+    display: grid;
+    grid-template-columns: minmax(140px, 190px) repeat(3, minmax(120px, 1fr));
+    gap: 2rem;
+    align-items: start;
+}
+
+footer > .footer-content > img {
+    width: 150px;
     height: auto;
 }
 
+footer nav,
 footer section {
     display: flex;
     flex-direction: column;
@@ -61,7 +69,17 @@ footer a:focus-visible {
 }
 
 @media (max-width: 768px) {
-    footer {
+    footer .footer-content {
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+    }
+
+    footer > .footer-content > img {
+        margin: 0 auto;
+    }
+
+    footer nav,
+    footer section {
         text-align: center;
     }
 }

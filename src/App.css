@@ -4,6 +4,14 @@
   min-height: 100vh;
 }
 
+.App main {
+  flex: 1;
+}
+
+.App footer {
+  margin-top: auto;
+}
+
 .container {
   width: 100%;
   max-width: 65rem;

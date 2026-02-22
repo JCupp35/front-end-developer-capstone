@@ -8,10 +8,22 @@ import { fetchAPI, submitAPI } from '../utilities';
 import './Main.css';
 
 const BOOKINGS_STORAGE_KEY = 'bookings';
+const INITIAL_BOOKING_FORM = {
+  name: '',
+  phone: '',
+  date: '',
+  time: '',
+  guests: '1',
+  occasion: '',
+};
 
 function loadStoredBookings() {
   const storedBookings = localStorage.getItem(BOOKINGS_STORAGE_KEY);
   return storedBookings ? JSON.parse(storedBookings) : [];
+}
+
+function saveBookings(bookings) {
+  localStorage.setItem(BOOKINGS_STORAGE_KEY, JSON.stringify(bookings));
 }
 
 export function initializeTimes() {
@@ -28,7 +40,8 @@ export function updateTimes(state, action) {
 
 function Main() {
   const navigate = useNavigate();
-  const [bookings, setBookings] = useState(loadStoredBookings);
+  const [, setBookings] = useState(loadStoredBookings);
+  const [pendingBooking, setPendingBooking] = useState(INITIAL_BOOKING_FORM);
 
   const [availableTimes, dispatchAvailableTimes] = useReducer(
     updateTimes,
@@ -43,14 +56,20 @@ function Main() {
     });
   };
 
-  const submitForm = (formData) => {
-    if (submitAPI(formData)) {
-      setBookings((existingBookings) => {
-        const updatedBookings = [...existingBookings, formData];
-        localStorage.setItem(BOOKINGS_STORAGE_KEY, JSON.stringify(updatedBookings));
+  const continueToReview = (formData) => {
+    setPendingBooking(formData);
+    navigate('/confirmed');
+  };
+
+  const confirmBooking = () => {
+    if (submitAPI(pendingBooking)) {
+      setBookings((prevBookings) => {
+        const updatedBookings = [...prevBookings, pendingBooking];
+        saveBookings(updatedBookings);
         return updatedBookings;
       });
-      navigate('/confirmed');
+      setPendingBooking(INITIAL_BOOKING_FORM);
+      navigate('/', { state: { bookingConfirmed: true } });
     }
   };
 
@@ -63,13 +82,23 @@ function Main() {
           element={
             <BookingPage
               availableTimes={availableTimes}
-              bookings={bookings}
+              bookingData={pendingBooking}
+              onBookingDataChange={setPendingBooking}
               onDateChangeFromMain={handleDateChange}
-              submitForm={submitForm}
+              continueToReview={continueToReview}
             />
           }
         />
-        <Route path="/confirmed" element={<ConfirmedBooking />} />
+        <Route
+          path="/confirmed"
+          element={
+            <ConfirmedBooking
+              bookingData={pendingBooking}
+              onBackToBooking={() => navigate('/booking')}
+              onConfirmBooking={confirmBooking}
+            />
+          }
+        />
         <Route path="*" element={<Homepage />} />
       </Routes>
     </main>
