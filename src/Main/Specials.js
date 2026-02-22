@@ -6,7 +6,7 @@ function Specials() {
       <div className="container">
         <header className="specials-header">
           <h2>This weeks specials!</h2>
-          <button type="button">Online Menu</button>
+          <button type="button" aria-label="On Click">Online Menu</button>
         </header>
         <div className="specials-cards">
           {specialsData.map((special) => (

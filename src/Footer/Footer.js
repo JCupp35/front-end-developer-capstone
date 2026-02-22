@@ -7,7 +7,7 @@ function Footer() {
             <div className="container flex-container" style={{ alignItems: 'flex-start' }}>
                 <img src={logo} alt="Little lemon logo" />
 
-                <section>
+                <nav aria-label="Doormat Navigation">
                     <h2>Doormat Navigation</h2>
                     <ul>
                         <li><a href="#home">Home</a></li>
@@ -17,7 +17,7 @@ function Footer() {
                         <li><a href="#order-online">Order Online</a></li>
                         <li><a href="#login">Login</a></li>
                     </ul>
-                </section>
+                </nav>
 
                 <section>
                     <h2>Contact</h2>

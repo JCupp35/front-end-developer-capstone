@@ -15,6 +15,25 @@ beforeEach(() => {
   submitAPI.mockReturnValue(true);
 });
 
+const renderBookingRoute = () =>
+  render(
+    <MemoryRouter initialEntries={['/booking']}>
+      <Main />
+    </MemoryRouter>
+  );
+
+const fillRequiredValidFields = () => {
+  fireEvent.change(screen.getByLabelText(/choose date/i), {
+    target: { value: '2026-02-20' },
+  });
+  fireEvent.change(screen.getByLabelText(/choose time/i), {
+    target: { value: '17:00' },
+  });
+  fireEvent.change(screen.getByLabelText(/occasion/i), {
+    target: { value: 'Birthday' },
+  });
+};
+
 test('initializeTimes returns available times from fetchAPI', () => {
   const mockTimes = ['17:00', '17:30', '18:00'];
   fetchAPI.mockReturnValue(mockTimes);
@@ -48,11 +67,7 @@ test('reads existing bookings from localStorage', () => {
     ])
   );
 
-  render(
-    <MemoryRouter initialEntries={['/booking']}>
-      <Main />
-    </MemoryRouter>
-  );
+  renderBookingRoute();
 
   expect(
     screen.getByText('2026-02-18 - 18:00 - 2 guests - Birthday')
@@ -60,15 +75,8 @@ test('reads existing bookings from localStorage', () => {
 });
 
 test('writes new booking to localStorage on successful submit', () => {
-  render(
-    <MemoryRouter initialEntries={['/booking']}>
-      <Main />
-    </MemoryRouter>
-  );
-
-  fireEvent.change(screen.getByLabelText(/choose date/i), {
-    target: { value: '2026-02-20' },
-  });
+  renderBookingRoute();
+  fillRequiredValidFields();
   fireEvent.click(screen.getByDisplayValue('Make Your reservation'));
 
   expect(submitAPI).toHaveBeenCalledWith({
@@ -86,4 +94,84 @@ test('writes new booking to localStorage on successful submit', () => {
     guests: '1',
     occasion: 'Birthday',
   });
+});
+
+test('submit button is disabled until all required fields are valid', () => {
+  renderBookingRoute();
+
+  const submitButton = screen.getByDisplayValue('Make Your reservation');
+  expect(submitButton).toBeDisabled();
+
+  fillRequiredValidFields();
+
+  expect(submitButton).toBeEnabled();
+});
+
+test('submit remains disabled when date is missing', () => {
+  renderBookingRoute();
+
+  const submitButton = screen.getByDisplayValue('Make Your reservation');
+  fireEvent.change(screen.getByLabelText(/choose time/i), {
+    target: { value: '17:00' },
+  });
+  fireEvent.change(screen.getByLabelText(/occasion/i), {
+    target: { value: 'Birthday' },
+  });
+
+  expect(submitButton).toBeDisabled();
+});
+
+test('submit remains disabled when time is missing', () => {
+  renderBookingRoute();
+
+  const submitButton = screen.getByDisplayValue('Make Your reservation');
+  fireEvent.change(screen.getByLabelText(/choose date/i), {
+    target: { value: '2026-02-20' },
+  });
+  fireEvent.change(screen.getByLabelText(/occasion/i), {
+    target: { value: 'Birthday' },
+  });
+
+  expect(submitButton).toBeDisabled();
+});
+
+test('submit remains disabled when guests are out of range', () => {
+  renderBookingRoute();
+
+  const submitButton = screen.getByDisplayValue('Make Your reservation');
+  fillRequiredValidFields();
+  fireEvent.change(screen.getByLabelText(/number of guests/i), {
+    target: { value: '0' },
+  });
+  expect(submitButton).toBeDisabled();
+
+  fireEvent.change(screen.getByLabelText(/number of guests/i), {
+    target: { value: '11' },
+  });
+  expect(submitButton).toBeDisabled();
+});
+
+test('submit remains disabled when occasion is missing', () => {
+  renderBookingRoute();
+
+  const submitButton = screen.getByDisplayValue('Make Your reservation');
+  fireEvent.change(screen.getByLabelText(/choose date/i), {
+    target: { value: '2026-02-20' },
+  });
+  fireEvent.change(screen.getByLabelText(/choose time/i), {
+    target: { value: '17:00' },
+  });
+
+  expect(submitButton).toBeDisabled();
+});
+
+test('does not submit when form is invalid', () => {
+  renderBookingRoute();
+
+  fireEvent.change(screen.getByLabelText(/choose date/i), {
+    target: { value: '2026-02-20' },
+  });
+  fireEvent.click(screen.getByDisplayValue('Make Your reservation'));
+
+  expect(submitAPI).not.toHaveBeenCalled();
 });

@@ -38,6 +38,12 @@ nav a:hover {
     color: var(--ll-color-green);
 }
 
+nav a.active {
+    color: var(--ll-color-green);
+    text-decoration: underline;
+    text-underline-offset: 0.2rem;
+}
+
 nav a:focus-visible {
     color: var(--ll-color-green);
     outline: 2px solid var(--ll-color-yellow);

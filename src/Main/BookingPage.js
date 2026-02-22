@@ -4,9 +4,16 @@ import Bookings from './Bookings';
 
 function BookingPage({ availableTimes, bookings, onDateChangeFromMain, submitForm }) {
   const [date, setDate] = useState('');
-  const [time, setTime] = useState('17:00');
+  const [time, setTime] = useState('');
   const [guests, setGuests] = useState('1');
-  const [occasion, setOccasion] = useState('Birthday');
+  const [occasion, setOccasion] = useState('');
+
+  const guestsNumber = Number(guests);
+  const isDateValid = date !== '';
+  const isTimeValid = time !== '' && availableTimes.includes(time);
+  const isGuestsValid = guests !== '' && guestsNumber >= 1 && guestsNumber <= 10;
+  const isOccasionValid = occasion !== '';
+  const isFormValid = isDateValid && isTimeValid && isGuestsValid && isOccasionValid;
 
   const bookingData = {
     date,
@@ -41,6 +48,7 @@ function BookingPage({ availableTimes, bookings, onDateChangeFromMain, submitFor
           onGuestsChange={(event) => setGuests(event.target.value)}
           onOccasionChange={(event) => setOccasion(event.target.value)}
           onSubmit={handleSubmit}
+          isFormValid={isFormValid}
         />
         <Bookings
           bookingData={bookingData}

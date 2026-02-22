@@ -4,6 +4,7 @@ function BookingForm({
   guests,
   occasion,
   availableTimes,
+  isFormValid,
   onDateChange,
   onTimeChange,
   onGuestsChange,
@@ -21,6 +22,7 @@ function BookingForm({
         id="res-date"
         value={date}
         onChange={onDateChange}
+        required
       />
 
       <label htmlFor="res-time">Choose time</label>
@@ -28,9 +30,13 @@ function BookingForm({
         id="res-time"
         value={time}
         onChange={onTimeChange}
+        required
       >
+        <option value="">Select a time</option>
         {availableTimes.map((availableTime) => (
-          <option key={availableTime}>{availableTime}</option>
+          <option key={availableTime} value={availableTime}>
+            {availableTime}
+          </option>
         ))}
       </select>
 
@@ -43,6 +49,7 @@ function BookingForm({
         id="guests"
         value={guests}
         onChange={onGuestsChange}
+        required
       />
 
       <label htmlFor="occasion">Occasion</label>
@@ -50,12 +57,14 @@ function BookingForm({
         id="occasion"
         value={occasion}
         onChange={onOccasionChange}
+        required
       >
-        <option>Birthday</option>
-        <option>Anniversary</option>
+        <option value="">Select an occasion</option>
+        <option value="Birthday">Birthday</option>
+        <option value="Anniversary">Anniversary</option>
       </select>
 
-      <input type="submit" value="Make Your reservation" />
+      <input type="submit" value="Make Your reservation" disabled={!isFormValid} />
     </form>
   );
 }
